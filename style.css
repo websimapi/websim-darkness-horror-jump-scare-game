@@ -8,6 +8,17 @@ body {
   overflow-x: hidden;
 }
 
+/* Full screen video feed styling */
+video#video {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover;
+  z-index: 1;
+}
+
 /* Instruction overlay before game starts */
 #instruct {
   position: fixed;

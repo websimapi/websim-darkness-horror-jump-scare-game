@@ -48,8 +48,6 @@
     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
     const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
     const brightness = calculateBrightness(imageData);
-    // Uncomment the next line to log brightness (for debugging)
-    // console.log("Ambient brightness:", brightness);
 
     if (brightness < brightnessThreshold) {
       startGame();
@@ -68,14 +66,15 @@
     scheduleNextJumpScare();
   }
 
-  // Schedule the next jump scare event at a random interval between 15-30 seconds
+  // Schedule the next jump scare event at a random interval between 5-10 seconds
   function scheduleNextJumpScare() {
-    const delay = 15000 + Math.random() * 15000;
+    const delay = 5000 + Math.random() * 5000;
     setTimeout(jumpScareEvent, delay);
   }
 
   // Trigger one jump scare event:
-  // Fetch a horror description from the AI, create a jump scare image, animate it, and remove it.
+  // Fetch a horror description from the AI, create a jump scare image with the LLM response,
+  // then update its src to an SVG so that it animates and scares the player.
   async function jumpScareEvent() {
     let description;
     try {
@@ -89,10 +88,8 @@
     const imgId = "jumpscare-" + jumpScareCounter;
     const img = document.createElement("img");
     img.id = imgId;
+    // Set the LLM response as both the alt text and initial src (as plain text)
     img.alt = description;
-
-    // First, set a dummy source containing the raw description text.
-    // (This satisfies the instruction of initially setting src and alt to the LLM response.)
     img.src = "data:text/plain," + encodeURIComponent(description);
 
     // Prepare the image to cover the whole screen
@@ -126,7 +123,6 @@
   }
 
   // Call the language model API to generate a horrifying description.
-  // This function calls the /api/ai_completion endpoint.
   async function getAIResponse() {
     const prompt =
       "Generate a horrifying description for a jump scare in a horror game. " +
